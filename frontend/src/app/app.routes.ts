@@ -4,6 +4,7 @@ import { Routes } from '@angular/router';
 import { Home } from './components/home/home';
 import { About } from './components/about/about';
 import { Features } from './components/features/features';
+import { TodoComponent } from './components/todo/todo';
 
 // 라우팅 설정 정의
 export const routes: Routes = [
@@ -11,5 +12,6 @@ export const routes: Routes = [
   { path: '', component: Home },
   { path: 'about', component: About },
   { path: 'features', component: Features },
+  { path: 'todo', component: TodoComponent },
   { path: '**', redirectTo: '' }, // 잘못된 경로로 접속시 홈으로 리다이렉트
 ];

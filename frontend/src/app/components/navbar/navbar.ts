@@ -16,5 +16,6 @@ export class Navbar {
     { label: '홈', path: '/' },
     { label: '소개', path: '/about' },
     { label: '기능', path: '/features' },
+    { label: '할 일', path: '/todo' },
   ];
 }

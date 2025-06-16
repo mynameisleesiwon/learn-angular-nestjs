@@ -1,0 +1,37 @@
+<div class="todo-container">
+  <!-- 할 일 입력 폼 -->
+  <div class="todo-input">
+    <!-- 
+      [(ngModel)]="newTodoText": 양방향 바인딩으로 입력값을 newTodoText 변수와 연결
+      (keyup.enter)="addTodo()": 엔터키를 누르면 addTodo() 함수 실행
+    -->
+    <input
+      type="text"
+      [(ngModel)]="newTodoText"
+      placeholder="할 일을 입력하세요"
+      (keyup.enter)="addTodo()"
+    />
+    <button (click)="addTodo()">추가</button>
+  </div>
+
+  <!-- 할 일 목록 -->
+  <ul class="todo-list">
+    <!-- 
+      [class.completed]="todo.completed": todo.completed가 true일 때 completed 클래스 적용
+    -->
+    <li *ngFor="let todo of todos" [class.completed]="todo.completed">
+      <!-- 
+        [checked]="todo.completed": 체크박스의 상태를 todo.completed와 동기화
+        (change)="toggleTodo(todo.id)": 체크박스 상태가 변경되면 toggleTodo() 함수 실행
+      -->
+      <input
+        type="checkbox"
+        [checked]="todo.completed"
+        (change)="toggleTodo(todo.id)"
+      />
+      <!-- 할 일 내용 표시 -->
+      <span>{{todo.text}}</span>
+      <button (click)="deleteTodo(todo.id)">삭제</button>
+    </li>
+  </ul>
+</div>
