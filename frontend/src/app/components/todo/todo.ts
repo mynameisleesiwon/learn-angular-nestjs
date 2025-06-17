@@ -13,7 +13,13 @@ import { Todo, TodoService } from '../../services/todo';
 // OnInit 인터페이스 구현 (컴포넌트 초기화 시 실행될 코드 정의)
 export class TodoComponent implements OnInit {
   todos: Todo[] = [];
-  newTodoText: string = '';
+  newTodoTitle: string = '';
+  newTodoDescription: string = '';
+
+  // 수정 모드 관련 변수들
+  editingTodo: Todo | null = null;
+  editTitle: string = '';
+  editDescription: string = '';
 
   constructor(private todoService: TodoService) {}
 
@@ -34,14 +40,17 @@ export class TodoComponent implements OnInit {
   // 새로운 할 일을 추가
   addTodo() {
     // 입력된 텍스트가 비어있지 않은 경우에만 추가
-    if (this.newTodoText.trim()) {
-      this.todoService.createTodo(this.newTodoText).subscribe({
-        next: (todo) => {
-          this.todos.push(todo);
-          this.newTodoText = '';
-        },
-        error: (error) => console.error('할 일 추가에 실패했습니다:', error),
-      });
+    if (this.newTodoTitle.trim()) {
+      this.todoService
+        .createTodo(this.newTodoTitle, this.newTodoDescription)
+        .subscribe({
+          next: (todo) => {
+            this.todos.push(todo);
+            this.newTodoTitle = '';
+            this.newTodoDescription = '';
+          },
+          error: (error) => console.error('할 일 추가에 실패했습니다:', error),
+        });
     }
   }
 
@@ -68,5 +77,34 @@ export class TodoComponent implements OnInit {
       },
       error: (error) => console.error('할 일 삭제에 실패했습니다:', error),
     });
+  }
+
+  // 수정 모드 시작
+  startEdit(todo: Todo) {
+    this.editingTodo = todo;
+    this.editTitle = todo.title;
+    this.editDescription = todo.description;
+  }
+
+  // 수정 취소
+  cancelEdit() {
+    this.editingTodo = null;
+    this.editTitle = '';
+    this.editDescription = '';
+  }
+
+  // 수정 저장
+  saveEdit() {
+    if (this.editingTodo && this.editTitle.trim()) {
+      this.todoService
+        .updateTodo(this.editingTodo.id, this.editTitle, this.editDescription)
+        .subscribe((updatedTodo) => {
+          const index = this.todos.findIndex((t) => t.id === updatedTodo.id);
+          if (index !== -1) {
+            this.todos[index] = updatedTodo;
+          }
+          this.cancelEdit();
+        });
+    }
   }
 }

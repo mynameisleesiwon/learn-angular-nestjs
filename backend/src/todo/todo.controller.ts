@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
+import { UpdateTodoDto } from './dto/update-todo.dto';
 
 @Controller('todo')
 export class TodoController {
@@ -26,15 +27,27 @@ export class TodoController {
     return this.todoService.create(createTodoDto);
   }
 
-  // 할 일 완료 상태 토글
-  @Patch(':id/toggle')
-  toggle(@Param('id') id: string) {
-    return this.todoService.toggle(Number(id));
+  // 특정 할 일 조회
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.todoService.findOne(+id);
+  }
+
+  // 할 일 수정
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto) {
+    return this.todoService.update(+id, updateTodoDto);
   }
 
   // 할 일 삭제
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.todoService.remove(Number(id));
+    return this.todoService.remove(+id);
+  }
+
+  // 할 일 완료 상태 토글
+  @Patch(':id/toggle')
+  toggleComplete(@Param('id') id: string) {
+    return this.todoService.toggleComplete(+id);
   }
 }

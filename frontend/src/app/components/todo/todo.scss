@@ -1,64 +1,187 @@
-// frontend/src/app/components/todo/todo.scss
+// 📝 할 일 목록 간단 스타일
 .todo-container {
   max-width: 500px;
-  margin: 0 auto;
+  margin: 20px auto;
   padding: 20px;
+  font-family: Arial, sans-serif;
 
-  .todo-input {
-    display: flex;
-    gap: 10px;
+  h2 {
+    text-align: center;
+    color: #333;
     margin-bottom: 20px;
+  }
+}
 
-    input {
-      flex: 1;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
+// 입력 영역
+.todo-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
 
-    button {
-      padding: 8px 16px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+  input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 
-      &:hover {
-        background-color: #45a049;
-      }
+    &:focus {
+      outline: none;
+      border-color: #007bff;
     }
   }
 
-  .todo-list {
-    list-style: none;
-    padding: 0;
+  button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 
-    li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      border-bottom: 1px solid #eee;
+    &:hover {
+      background: #0056b3;
+    }
+  }
+}
 
-      &.completed {
-        span {
+// 할 일 목록
+.todo-list {
+  .todo-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      border-color: #ddd;
+    }
+
+    // 체크박스 영역
+    input[type="checkbox"] {
+      margin-right: 15px;
+      margin-top: 2px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    // 메인 콘텐츠 영역
+    .todo-content {
+      flex: 1;
+      margin-right: 15px;
+
+      h3 {
+        margin: 0 0 8px 0;
+        color: #333;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+
+        &.completed {
           text-decoration: line-through;
           color: #888;
         }
       }
 
+      p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.5;
+
+        &.completed {
+          text-decoration: line-through;
+          color: #aaa;
+        }
+      }
+    }
+
+    // 액션 버튼 영역
+    .todo-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 60px;
+
       button {
-        margin-left: auto;
-        padding: 4px 8px;
-        background-color: #f44336;
-        color: white;
+        padding: 8px 12px;
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+
+        &:first-child {
+          background: #28a745;
+          color: white;
+
+          &:hover {
+            background: #218838;
+            transform: translateY(-1px);
+          }
+        }
+
+        &:last-child {
+          background: #dc3545;
+          color: white;
+
+          &:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+          }
+        }
+      }
+    }
+  }
+}
+
+// 수정 모드
+.edit-mode {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+
+  input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+  }
+
+  .edit-actions {
+    display: flex;
+    gap: 5px;
+
+    button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+
+      &:first-child {
+        background: #007bff;
+        color: white;
 
         &:hover {
-          background-color: #da190b;
+          background: #0056b3;
+        }
+      }
+
+      &:last-child {
+        background: #6c757d;
+        color: white;
+
+        &:hover {
+          background: #545b62;
         }
       }
     }

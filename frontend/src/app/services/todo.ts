@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 // Todo 인터페이스 정의
 export interface Todo {
   id: number;
-  text: string;
+  title: string;
+  description: string;
   completed: boolean;
 }
 
@@ -24,8 +25,16 @@ export class TodoService {
   }
 
   // 새로운 할 일 생성
-  createTodo(text: string): Observable<Todo> {
-    return this.http.post<Todo>(this.apiUrl, { text });
+  createTodo(title: string, description: string): Observable<Todo> {
+    return this.http.post<Todo>(this.apiUrl, { title, description });
+  }
+
+  // 할 일 수정
+  updateTodo(id: number, title: string, description: string): Observable<Todo> {
+    return this.http.patch<Todo>(`${this.apiUrl}/${id}`, {
+      title,
+      description,
+    });
   }
 
   // 할 일 완료 상태 토글

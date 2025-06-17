@@ -1,37 +1,45 @@
 <div class="todo-container">
-  <!-- 할 일 입력 폼 -->
+  <h2>할 일 목록</h2>
   <div class="todo-input">
-    <!-- 
-      [(ngModel)]="newTodoText": 양방향 바인딩으로 입력값을 newTodoText 변수와 연결
-      (keyup.enter)="addTodo()": 엔터키를 누르면 addTodo() 함수 실행
-    -->
+    <input type="text" [(ngModel)]="newTodoTitle" placeholder="할 일 제목" />
     <input
       type="text"
-      [(ngModel)]="newTodoText"
-      placeholder="할 일을 입력하세요"
-      (keyup.enter)="addTodo()"
+      [(ngModel)]="newTodoDescription"
+      placeholder="할 일 설명"
     />
     <button (click)="addTodo()">추가</button>
   </div>
-
-  <!-- 할 일 목록 -->
-  <ul class="todo-list">
-    <!-- 
-      [class.completed]="todo.completed": todo.completed가 true일 때 completed 클래스 적용
-    -->
-    <li *ngFor="let todo of todos" [class.completed]="todo.completed">
-      <!-- 
-        [checked]="todo.completed": 체크박스의 상태를 todo.completed와 동기화
-        (change)="toggleTodo(todo.id)": 체크박스 상태가 변경되면 toggleTodo() 함수 실행
-      -->
-      <input
-        type="checkbox"
-        [checked]="todo.completed"
-        (change)="toggleTodo(todo.id)"
-      />
-      <!-- 할 일 내용 표시 -->
-      <span>{{todo.text}}</span>
-      <button (click)="deleteTodo(todo.id)">삭제</button>
-    </li>
-  </ul>
+  <div class="todo-list">
+    <div *ngFor="let todo of todos" class="todo-item">
+      <!-- 수정 모드가 아닐 때 -->
+      <div *ngIf="editingTodo?.id !== todo.id">
+        <input
+          type="checkbox"
+          [checked]="todo.completed"
+          (change)="toggleTodo(todo.id)"
+        />
+        <div class="todo-content">
+          <h3 [class.completed]="todo.completed">{{ todo.title }}</h3>
+          <p [class.completed]="todo.completed">{{ todo.description }}</p>
+        </div>
+        <div class="todo-actions">
+          <button (click)="startEdit(todo)">수정</button>
+          <button (click)="deleteTodo(todo.id)">삭제</button>
+        </div>
+      </div>
+      <!-- 수정 모드일 때 -->
+      <div *ngIf="editingTodo?.id === todo.id" class="edit-mode">
+        <input type="text" [(ngModel)]="editTitle" placeholder="할 일 제목" />
+        <input
+          type="text"
+          [(ngModel)]="editDescription"
+          placeholder="할 일 설명"
+        />
+        <div class="edit-actions">
+          <button (click)="saveEdit()">저장</button>
+          <button (click)="cancelEdit()">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
