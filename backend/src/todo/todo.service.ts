@@ -13,46 +13,56 @@ export class TodoService {
   ) {}
 
   // 모든 할 일 조회
-  async findAll(): Promise<Todo[]> {
-    return this.todoRepository.find();
-  }
-
-  // 특정 할 일 조회
-  async findOne(id: number): Promise<Todo> {
-    const todo = await this.todoRepository.findOne({ where: { id } });
-    if (!todo) {
-      throw new NotFoundException('할 일을 찾을 수 없습니다.');
-    }
-    return todo;
+  async findAllByUser(userId: number): Promise<Todo[]> {
+    return this.todoRepository.find({
+      where: { userId },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   // 새로운 할 일 생성
-  async create(createTodoDto: CreateTodoDto): Promise<Todo> {
-    const todo = this.todoRepository.create(createTodoDto);
+  async create(createTodoDto: CreateTodoDto, userId: number): Promise<Todo> {
+    const todo = this.todoRepository.create({
+      ...createTodoDto, // 🔑 title, description
+      userId, // 🔑 사용자 ID 추가
+    });
     return this.todoRepository.save(todo);
   }
 
+  // 할 일 조회
+  async findOneByUser(id: number, userId: number): Promise<Todo> {
+    const todo = await this.todoRepository.findOne({
+      where: { id, userId },
+    });
+
+    if (!todo) {
+      throw new NotFoundException('할 일을 찾을 수 없습니다.');
+    }
+
+    return todo;
+  }
+
   // 할 일 수정
-  async update(id: number, updateTodoDto: UpdateTodoDto): Promise<Todo> {
-    // 할 일이 존재하는지 확인
-    const todo = await this.findOne(id);
-    // 할 일 정보 업데이트
+  async updateByUser(
+    id: number,
+    updateTodoDto: UpdateTodoDto,
+    userId: number,
+  ): Promise<Todo> {
+    const todo = await this.findOneByUser(id, userId);
+
     Object.assign(todo, updateTodoDto);
-    // 업데이트된 할 일 저장
     return this.todoRepository.save(todo);
   }
 
   // 할 일 삭제
-  async remove(id: number): Promise<void> {
-    const result = await this.todoRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException('할 일을 찾을 수 없습니다.');
-    }
+  async removeByUser(id: number, userId: number): Promise<void> {
+    const todo = await this.findOneByUser(id, userId);
+    await this.todoRepository.remove(todo);
   }
 
   // 할 일 완료 상태 변경
-  async toggleComplete(id: number): Promise<Todo> {
-    const todo = await this.findOne(id);
+  async toggleCompleteByUser(id: number, userId: number): Promise<Todo> {
+    const todo = await this.findOneByUser(id, userId);
     todo.completed = !todo.completed;
     return this.todoRepository.save(todo);
   }
