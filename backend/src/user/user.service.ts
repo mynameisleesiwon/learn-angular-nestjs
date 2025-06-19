@@ -38,7 +38,12 @@ export class UserService {
     return this.userRepository.save(newUser);
   }
 
-  // 비밀번호 검증 메서드 추가
+  // ID로 사용자를 찾는 메서드
+  async findById(id: number): Promise<User | null> {
+    return this.userRepository.findOne({ where: { id } });
+  }
+
+  // 비밀번호 검증 메서드
   async validatePassword(
     plainPassword: string,
     hashedPassword: string,

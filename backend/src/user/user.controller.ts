@@ -67,8 +67,19 @@ export class UserController {
   // 인증이 필요한 API 예시
   @UseGuards(AuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    // req.user에는 JWT 토큰의 페이로드가 들어있음
-    return req.user;
+  async getProfile(@Request() req) {
+    // JWT 토큰의 페이로드에서 사용자 ID 추출
+    const userId = req.user.sub;
+
+    // 실제 사용자 정보를 데이터베이스에서 조회
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new UnauthorizedException('사용자를 찾을 수 없습니다.');
+    }
+
+    // 비밀번호는 제외하고 반환
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }
