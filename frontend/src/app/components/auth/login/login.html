@@ -1,0 +1,41 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>로그인</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">이메일</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="loginData.email"
+          placeholder="이메일을 입력하세요"
+          [disabled]="isLoading"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">비밀번호</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="loginData.password"
+          placeholder="비밀번호를 입력하세요"
+          [disabled]="isLoading"
+        />
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <button type="submit" class="login-button" [disabled]="isLoading">
+        <span *ngIf="isLoading">로그인 중...</span>
+        <span *ngIf="!isLoading">로그인</span>
+      </button>
+    </form>
+
+    <div class="signup-link">
+      계정이 없으신가요?
+      <a routerLink="/signup">회원가입</a>
+    </div>
+  </div>
+</div>

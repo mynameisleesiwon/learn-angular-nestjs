@@ -40,7 +40,52 @@
     }
   }
 
-  .nav-menu {
-    list-style: none;
+  .nav-auth {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .auth-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .auth-link {
+      color: #007bff;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      background-color: white;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #f8f9fa;
+      }
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: white;
+    }
+
+    .user-name {
+      font-weight: 500;
+    }
+
+    .logout-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #c82333;
+      }
+    }
   }
 }

@@ -1,24 +1,38 @@
 <nav class="navbar">
   <div class="navbar-brand">
-    <!-- [routerLinkActiveOptions]="{exact: true}" : 정확한 경로 매칭-->
     <a
       routerLink="/"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{exact: true}"
       class="logo"
-      >Angular + NestJS</a
     >
+      Angular + NestJS
+    </a>
   </div>
 
   <ul class="nav-menu">
-    <!-- *ngFor : menuItems 배열의 각 항목을 반복해서 메뉴 생성 -->
     <li *ngFor="let item of menuItems">
       <a
         [routerLink]="item.path"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: true}"
-        >{{ item.label }}</a
       >
+        {{ item.label }}
+      </a>
     </li>
   </ul>
+
+  <div class="nav-auth">
+    <!-- 로그인되지 않은 경우 -->
+    <div *ngIf="!(currentUser$ | async)" class="auth-links">
+      <a routerLink="/login" class="auth-link">로그인</a>
+      <a routerLink="/signup" class="auth-link">회원가입</a>
+    </div>
+
+    <!-- 로그인된 경우 -->
+    <div *ngIf="currentUser$ | async as user" class="user-menu">
+      <span class="user-name">안녕하세요, {{ user.nickname }}님!</span>
+      <button (click)="logout()" class="logout-btn">로그아웃</button>
+    </div>
+  </div>
 </nav>

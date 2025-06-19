@@ -1,0 +1,59 @@
+<div class="signup-container">
+  <div class="signup-card">
+    <h2>회원가입</h2>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">이메일</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="signupData.email"
+          placeholder="이메일을 입력하세요"
+          [disabled]="isLoading"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="nickname">닉네임</label>
+        <input
+          type="text"
+          id="nickname"
+          name="nickname"
+          [(ngModel)]="signupData.nickname"
+          placeholder="닉네임을 입력하세요"
+          [disabled]="isLoading"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">비밀번호</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="signupData.password"
+          placeholder="비밀번호를 입력하세요"
+          [disabled]="isLoading"
+        />
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <div class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <button type="submit" class="signup-button" [disabled]="isLoading">
+        <span *ngIf="isLoading">가입 중...</span>
+        <span *ngIf="!isLoading">회원가입</span>
+      </button>
+    </form>
+
+    <div class="login-link">
+      이미 계정이 있으신가요?
+      <a routerLink="/login">로그인</a>
+    </div>
+  </div>
+</div>

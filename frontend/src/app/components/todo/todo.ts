@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // ngIf, ngFor 등의 기본 디렉티브 사용을 위해 필요
 import { FormsModule } from '@angular/forms'; // 양방향 바인딩([(ngModel)])을 사용하기 위해 필요
-import { Todo, TodoService } from '../../services/todo';
+import { TodoService } from '../../services/todo';
+import { Todo } from '../../models/todo.model';
 
 @Component({
   selector: 'app-todo',

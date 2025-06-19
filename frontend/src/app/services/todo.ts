@@ -1,14 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-// Todo 인터페이스 정의
-export interface Todo {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-}
+import { Todo } from '../models/todo.model';
 
 @Injectable({
   providedIn: 'root',
