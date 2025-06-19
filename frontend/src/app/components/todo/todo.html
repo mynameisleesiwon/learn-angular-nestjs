@@ -1,44 +1,86 @@
 <div class="todo-container">
-  <h2>할 일 목록</h2>
+  <h2>내 할 일 목록</h2>
+
+  <!-- 에러 메시지 표시 -->
+  <div *ngIf="errorMessage" class="error-message">
+    <span>{{ errorMessage }}</span>
+    <button (click)="clearError()" class="close-btn">×</button>
+  </div>
+
+  <!-- 로딩 상태 표시 -->
+  <div *ngIf="loading" class="loading">
+    <span>로딩 중...</span>
+  </div>
+
   <div class="todo-input">
-    <input type="text" [(ngModel)]="newTodoTitle" placeholder="할 일 제목" />
+    <input
+      type="text"
+      [(ngModel)]="newTodoTitle"
+      placeholder="할 일 제목"
+      [disabled]="loading"
+    />
     <input
       type="text"
       [(ngModel)]="newTodoDescription"
       placeholder="할 일 설명"
+      [disabled]="loading"
     />
-    <button (click)="addTodo()">추가</button>
+    <button (click)="addTodo()" [disabled]="loading || !newTodoTitle.trim()">
+      {{ loading ? '추가 중...' : '추가' }}
+    </button>
   </div>
+
   <div class="todo-list">
+    <!-- 할 일이 없을 때 -->
+    <div *ngIf="!loading && todos.length === 0" class="empty-state">
+      <p>아직 할 일이 없습니다. 새로운 할 일을 추가해보세요!</p>
+    </div>
+
+    <!-- 할 일 목록 -->
     <div *ngFor="let todo of todos" class="todo-item">
       <!-- 수정 모드가 아닐 때 -->
-      <div *ngIf="editingTodo?.id !== todo.id">
+      <div *ngIf="editingTodo?.id !== todo.id" class="todo-row">
         <input
           type="checkbox"
           [checked]="todo.completed"
           (change)="toggleTodo(todo.id)"
+          [disabled]="loading"
         />
         <div class="todo-content">
-          <h3 [class.completed]="todo.completed">{{ todo.title }}</h3>
-          <p [class.completed]="todo.completed">{{ todo.description }}</p>
+          <span class="todo-title" [class.completed]="todo.completed"
+            >{{ todo.title }}</span
+          >
+          <span class="todo-desc" [class.completed]="todo.completed"
+            >{{ todo.description }}</span
+          >
         </div>
         <div class="todo-actions">
-          <button (click)="startEdit(todo)">수정</button>
-          <button (click)="deleteTodo(todo.id)">삭제</button>
+          <button (click)="startEdit(todo)" [disabled]="loading">수정</button>
+          <button (click)="deleteTodo(todo.id)" [disabled]="loading">
+            삭제
+          </button>
         </div>
       </div>
       <!-- 수정 모드일 때 -->
-      <div *ngIf="editingTodo?.id === todo.id" class="edit-mode">
-        <input type="text" [(ngModel)]="editTitle" placeholder="할 일 제목" />
+      <div *ngIf="editingTodo?.id === todo.id" class="todo-row edit-mode">
+        <input
+          type="text"
+          [(ngModel)]="editTitle"
+          placeholder="할 일 제목"
+          [disabled]="loading"
+          class="edit-title"
+        />
         <input
           type="text"
           [(ngModel)]="editDescription"
           placeholder="할 일 설명"
+          [disabled]="loading"
+          class="edit-desc"
         />
-        <div class="edit-actions">
-          <button (click)="saveEdit()">저장</button>
-          <button (click)="cancelEdit()">취소</button>
-        </div>
+        <button (click)="saveEdit()" [disabled]="loading || !editTitle.trim()">
+          {{ loading ? '저장 중...' : '저장' }}
+        </button>
+        <button (click)="cancelEdit()" [disabled]="loading">취소</button>
       </div>
     </div>
   </div>

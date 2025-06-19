@@ -12,6 +12,61 @@
   }
 }
 
+// 에러 메시지
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #f5c6cb;
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: #721c24;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: #f1b0b7;
+      border-radius: 50%;
+    }
+  }
+}
+
+// 로딩 상태
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+// 빈 상태
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #dee2e6;
+
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
 // 입력 영역
 .todo-input {
   display: flex;
@@ -28,6 +83,12 @@
       outline: none;
       border-color: #007bff;
     }
+
+    &:disabled {
+      background: #f8f9fa;
+      color: #6c757d;
+      cursor: not-allowed;
+    }
   }
 
   button {
@@ -37,9 +98,16 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: all 0.2s ease;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: #0056b3;
+    }
+
+    &:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+      opacity: 0.6;
     }
   }
 }
@@ -47,141 +115,128 @@
 // 할 일 목록
 .todo-list {
   .todo-item {
-    display: flex;
-    align-items: flex-start;
-    padding: 20px;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-
-    &:hover {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      border-color: #ddd;
-    }
-
-    // 체크박스 영역
-    input[type="checkbox"] {
-      margin-right: 15px;
-      margin-top: 2px;
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-    }
-
-    // 메인 콘텐츠 영역
-    .todo-content {
-      flex: 1;
-      margin-right: 15px;
-
-      h3 {
-        margin: 0 0 8px 0;
-        color: #333;
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 1.4;
-
-        &.completed {
-          text-decoration: line-through;
-          color: #888;
-        }
-      }
-
-      p {
-        margin: 0;
-        color: #666;
-        font-size: 14px;
-        line-height: 1.5;
-
-        &.completed {
-          text-decoration: line-through;
-          color: #aaa;
-        }
-      }
-    }
-
-    // 액션 버튼 영역
-    .todo-actions {
+    .todo-row {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      min-width: 60px;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 14px 16px;
+      gap: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 
-      button {
-        padding: 8px 12px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: 500;
-        transition: all 0.2s ease;
+      &:hover {
+        border-color: #bbb;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+      }
 
-        &:first-child {
-          background: #28a745;
-          color: white;
+      // 수정 모드 스타일
+      &.edit-mode {
+        border-color: #007bff;
+        background: #f4faff;
+        gap: 10px;
+        padding: 10px 16px;
 
-          &:hover {
-            background: #218838;
-            transform: translateY(-1px);
+        input.edit-title,
+        input.edit-desc {
+          flex: 1 1 0;
+          min-width: 0;
+          padding: 6px 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 15px;
+          background: #fff;
+
+          &:focus {
+            border-color: #007bff;
+            background: #eaf4ff;
+            outline: none;
+          }
+
+          &:disabled {
+            background: #f8f9fa;
+            color: #6c757d;
+            cursor: not-allowed;
           }
         }
 
-        &:last-child {
-          background: #dc3545;
-          color: white;
+        button {
+          padding: 6px 14px;
+          border-radius: 4px;
+          border: none;
+          font-size: 13px;
+          cursor: pointer;
+          background: #f1f3f5;
+          color: #333;
+          transition: background 0.2s;
 
-          &:hover {
-            background: #c82333;
-            transform: translateY(-1px);
+          &:hover:not(:disabled) {
+            background: #007bff;
+            color: #fff;
+          }
+
+          &:disabled {
+            background: #e9ecef;
+            color: #aaa;
+            cursor: not-allowed;
           }
         }
       }
-    }
-  }
-}
 
-// 수정 모드
-.edit-mode {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 10px;
+      // 일반 모드 콘텐츠
+      .todo-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
 
-  input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-  }
+        .todo-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #222;
 
-  .edit-actions {
-    display: flex;
-    gap: 5px;
+          &.completed {
+            text-decoration: line-through;
+            color: #aaa;
+          }
+        }
 
-    button {
-      padding: 5px 10px;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 12px;
+        .todo-desc {
+          font-size: 13px;
+          color: #666;
 
-      &:first-child {
-        background: #007bff;
-        color: white;
-
-        &:hover {
-          background: #0056b3;
+          &.completed {
+            text-decoration: line-through;
+            color: #ccc;
+          }
         }
       }
 
-      &:last-child {
-        background: #6c757d;
-        color: white;
+      // 액션 버튼
+      .todo-actions {
+        display: flex;
+        gap: 6px;
 
-        &:hover {
-          background: #545b62;
+        button {
+          padding: 6px 14px;
+          border-radius: 4px;
+          border: none;
+          font-size: 13px;
+          cursor: pointer;
+          background: #f1f3f5;
+          color: #333;
+          transition: background 0.2s;
+
+          &:hover:not(:disabled) {
+            background: #007bff;
+            color: #fff;
+          }
+
+          &:disabled {
+            background: #e9ecef;
+            color: #aaa;
+            cursor: not-allowed;
+          }
         }
       }
     }

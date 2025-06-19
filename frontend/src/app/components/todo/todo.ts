@@ -17,6 +17,11 @@ export class TodoComponent implements OnInit {
   newTodoTitle: string = '';
   newTodoDescription: string = '';
 
+  // 로딩 상태 관리
+  loading: boolean = false;
+  // 에러 메시지 관리
+  errorMessage: string = '';
+
   // 수정 모드 관련 변수들
   editingTodo: Todo | null = null;
   editTitle: string = '';
@@ -31,17 +36,28 @@ export class TodoComponent implements OnInit {
 
   // 할 일 목록 로드
   loadTodos() {
+    this.loading = true;
+    this.errorMessage = '';
+
     this.todoService.getTodos().subscribe({
-      next: (todos) => (this.todos = todos),
-      error: (error) =>
-        console.error('할 일 목록을 불러오는데 실패했습니다:', error),
+      next: (todos) => {
+        this.todos = todos;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('할 일 목록을 불러오는데 실패했습니다:', error);
+        this.errorMessage = error.message || '할 일 목록을 불러올 수 없습니다.';
+        this.loading = false;
+      },
     });
   }
 
   // 새로운 할 일을 추가
   addTodo() {
-    // 입력된 텍스트가 비어있지 않은 경우에만 추가
     if (this.newTodoTitle.trim()) {
+      this.loading = true;
+      this.errorMessage = '';
+
       this.todoService
         .createTodo(this.newTodoTitle, this.newTodoDescription)
         .subscribe({
@@ -49,8 +65,13 @@ export class TodoComponent implements OnInit {
             this.todos.push(todo);
             this.newTodoTitle = '';
             this.newTodoDescription = '';
+            this.loading = false;
           },
-          error: (error) => console.error('할 일 추가에 실패했습니다:', error),
+          error: (error) => {
+            console.error('할 일 추가에 실패했습니다:', error);
+            this.errorMessage = error.message || '할 일을 추가할 수 없습니다.';
+            this.loading = false;
+          },
         });
     }
   }
@@ -59,25 +80,32 @@ export class TodoComponent implements OnInit {
   toggleTodo(id: number) {
     this.todoService.toggleTodo(id).subscribe({
       next: (updatedTodo) => {
-        // 해당 id를 가진 할 일을 찾아서 상태 업데이트
         const index = this.todos.findIndex((todo) => todo.id === id);
         if (index !== -1) {
           this.todos[index] = updatedTodo;
         }
       },
-      error: (error) => console.error('할 일 상태 변경에 실패했습니다:', error),
+      error: (error) => {
+        console.error('할 일 상태 변경에 실패했습니다:', error);
+        this.errorMessage = error.message || '할 일 상태를 변경할 수 없습니다.';
+      },
     });
   }
 
   // 할 일을 삭제
   deleteTodo(id: number) {
-    this.todoService.deleteTodo(id).subscribe({
-      next: () => {
-        // 해당 id를 가진 할 일을 목록에서 제거
-        this.todos = this.todos.filter((todo) => todo.id !== id);
-      },
-      error: (error) => console.error('할 일 삭제에 실패했습니다:', error),
-    });
+    if (confirm('정말로 이 할 일을 삭제하시겠습니까?')) {
+      this.todoService.deleteTodo(id).subscribe({
+        next: () => {
+          // 해당 id를 가진 할 일을 목록에서 제거
+          this.todos = this.todos.filter((todo) => todo.id !== id);
+        },
+        error: (error) => {
+          console.error('할 일 삭제에 실패했습니다:', error);
+          this.errorMessage = error.message || '할 일을 삭제할 수 없습니다.';
+        },
+      });
+    }
   }
 
   // 수정 모드 시작
@@ -97,15 +125,31 @@ export class TodoComponent implements OnInit {
   // 수정 저장
   saveEdit() {
     if (this.editingTodo && this.editTitle.trim()) {
+      this.loading = true;
+      this.errorMessage = '';
+
       this.todoService
         .updateTodo(this.editingTodo.id, this.editTitle, this.editDescription)
-        .subscribe((updatedTodo) => {
-          const index = this.todos.findIndex((t) => t.id === updatedTodo.id);
-          if (index !== -1) {
-            this.todos[index] = updatedTodo;
-          }
-          this.cancelEdit();
+        .subscribe({
+          next: (updatedTodo) => {
+            const index = this.todos.findIndex((t) => t.id === updatedTodo.id);
+            if (index !== -1) {
+              this.todos[index] = updatedTodo;
+            }
+            this.cancelEdit();
+            this.loading = false;
+          },
+          error: (error) => {
+            console.error('할 일 수정에 실패했습니다:', error);
+            this.errorMessage = error.message || '할 일을 수정할 수 없습니다.';
+            this.loading = false;
+          },
         });
     }
+  }
+
+  // 에러 메시지 초기화
+  clearError() {
+    this.errorMessage = '';
   }
 }

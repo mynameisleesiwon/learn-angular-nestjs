@@ -4,4 +4,11 @@ export interface Todo {
   title: string;
   description: string;
   completed: boolean;
+  userId: number;
+  user?: {
+    id: number;
+    email: string;
+  };
+  createdAt?: Date;
+  updatedAt?: Date;
 }
