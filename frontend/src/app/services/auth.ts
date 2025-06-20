@@ -85,7 +85,16 @@ export class AuthService {
 
   // 로그인 상태 확인
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    if (!token) return false;
+
+    // 토큰 만료 확인
+    if (this.isTokenExpired()) {
+      this.logout(); // 만료된 토큰 자동 제거
+      return false;
+    }
+
+    return true;
   }
 
   // JWT 토큰에서 페이로드 추출

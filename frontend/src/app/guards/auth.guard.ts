@@ -9,7 +9,9 @@ export const authGuard = () => {
   if (authService.isLoggedIn()) {
     return true; // 로그인된 사용자는 접근 허용
   } else {
-    // 로그인되지 않은 사용자는 로그인 페이지로 리다이렉트
+    // 만료된 토큰이 있다면 제거하고 로그인 페이지로 이동
+    authService.logout();
+    alert('세션이 만료되었습니다. 다시 로그인해주세요.');
     router.navigate(['/login']);
     return false;
   }
